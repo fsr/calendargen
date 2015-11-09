@@ -1,0 +1,91 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="51"
+     height="32"
+     version="1.1"
+     xmlns="http://www.w3.org/2000/svg">
+  <desc>FSR-Kalender</desc>
+  
+  <!--
+    Sizes:
+      Every day has a height of 1 and a width of 4, but we reserve an additional 0.25 padding
+      The latter value is hardcoded in the generator, since neither mustache nor SVG accept computations.
+      Thus the whole calendar has a width of 12 * 4.25 = 51.
+  -->
+  
+  {{#.}}
+    <g transform="translate({{xoffset}} 0)">
+      <text transform="translate(2 0.8)"
+            font-size="0.7"
+            font-family="Exo"
+            fill="#888888"
+            style="text-anchor: middle;">
+        {{monthname}}
+      </text>
+      <!-- the cells themself have to be the lowest elements, so we paint them all first -->
+      {{#days}}
+        <rect transform="translate(0 {{monthday}})"
+              height="1"
+              width="4"
+              fill="
+                {{#isWeekday}}#fdfdfd{{/isWeekday}}
+                {{#isWeekend}}#b1e11c{{/isWeekend}}
+                "
+              fill-opacity="0.5"
+              stroke="#111111"
+              stroke-width="0.01">
+        </rect>
+      {{/days}}
+      <!-- now we can paint all contents on top of it -->
+      {{#days}}
+        <g transform="translate(0 {{monthday}})">
+          <!-- lecture time marker -->
+          {{#isLecture}}
+            <rect transform="
+                    {{#isLectureStart}}translate(0.0 0.125) scale(1.0 0.875){{/isLectureStart}}
+                    {{#isLectureEnd}}scale(1.0 0.875){{/isLectureEnd}}
+                    "
+                  height="1"
+                  width="0.7"
+                  x="0.125"
+                  fill="#dddddd"
+                  fill-opacity="0.8">
+            </rect>
+          {{/isLecture}}
+          <!-- day texts -->
+          <g transform="translate(0 0.69)">
+            <text x="0.75"
+                  font-size="0.5"
+                  font-family="PT Sans"
+                  font-weight="400"
+                  fill="#222222"
+                  text-anchor="end">
+              {{monthday}}
+            </text>
+            <text x="0.9"
+                  y="-0.03"
+                  font-size="0.4"
+                  font-family="Exo"
+                  font-weight="100"
+                  fill="#444444"
+                  text-anchor="start">
+              {{dayname}}
+            </text>
+            {{#holiday}}
+              <text x="3.85"
+                    y="0.15"
+                    font-size="0.2"
+                    font-family="Exo"
+                    font-weight="200"
+                    fill="#444444"
+                    text-anchor="end">
+                {{holiday}}
+              </text>
+            {{/holiday}}
+          </g>
+        </g>
+      {{/days}}
+    </g>
+  {{/.}}
+  
+</svg>
