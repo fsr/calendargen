@@ -41,6 +41,7 @@ instance ToMustache CalCell where
     , "isWeekday" ~> (wd < 6 && mhol == Nothing)
     , "isWeekend" ~> (wd > 5 || mhol /= Nothing) -- If this was real code, I'd write a big "Caution, assumption!" here
     , "isLecture" ~> (lec /= No)
+    , "isFree" ~> (lec == No)
     , "isLectureStart" ~> (lec == Start)
     , "isLectureEnd" ~> (lec == End)
     ]
@@ -102,7 +103,7 @@ genCal
 genCal syear smonth = firstYear ++ secondYear
   where
     firstYear = map (genMonth syear) [smonth..12]
-    secondYear = map (genMonth (syear + 1)) [1..smonth - 1]
+    secondYear = map (genMonth (syear + 1)) [1..smonth]
     genMonth y m = Month m
                  $ map (genCell . C.fromGregorian y m)
                  $ [1..(monthLength (C.isLeapYear y) m)]
@@ -135,4 +136,4 @@ main = do
   let cal = genCal 2015 10
       renderableCal = map renderMonth $ zip cal [0..]
   
-  writeFile "kalender.svg" $ unpack $ substitute template $ renderableCal
+  writeFile "generated.svg" $ unpack $ substitute template $ renderableCal

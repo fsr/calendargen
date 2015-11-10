@@ -1,6 +1,6 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg width="51"
+<svg width="55.25"
      height="32"
      version="1.1"
      xmlns="http://www.w3.org/2000/svg">
@@ -10,12 +10,12 @@
     Sizes:
       Every day has a height of 1 and a width of 4, but we reserve an additional 0.25 padding
       The latter value is hardcoded in the generator, since neither mustache nor SVG accept computations.
-      Thus the whole calendar has a width of 12 * 4.25 = 51.
+      Thus the whole calendar has a width of 13 * 4.25 = 55.25.
   -->
   
   {{#.}}
     <g transform="translate({{xoffset}} 0)">
-      <text transform="translate(2 0.8)"
+      <text transform="translate(2 0.5)"
             font-size="0.7"
             font-family="Exo"
             fill="#888888"
@@ -28,8 +28,14 @@
               height="1"
               width="4"
               fill="
-                {{#isWeekday}}#fdfdfd{{/isWeekday}}
-                {{#isWeekend}}#b1e11c{{/isWeekend}}
+                {{#isLecture}}
+                  {{#isWeekday}}#fdfdfd{{/isWeekday}}
+                  {{#isWeekend}}#b1e11c{{/isWeekend}}
+                {{/isLecture}}
+                {{#isFree}}
+                  {{#isWeekday}}#eeffbb{{/isWeekday}}
+                  {{#isWeekend}}#b1e11c{{/isWeekend}}
+                {{/isFree}}
                 "
               fill-opacity="0.5"
               stroke="#111111"
@@ -41,6 +47,7 @@
         <g transform="translate(0 {{monthday}})">
           <!-- lecture time marker -->
           {{#isLecture}}
+          <!--
             <rect transform="
                     {{#isLectureStart}}translate(0.0 0.125) scale(1.0 0.875){{/isLectureStart}}
                     {{#isLectureEnd}}scale(1.0 0.875){{/isLectureEnd}}
@@ -51,6 +58,7 @@
                   fill="#dddddd"
                   fill-opacity="0.8">
             </rect>
+          -->
           {{/isLecture}}
           <!-- day texts -->
           <g transform="translate(0 0.69)">
