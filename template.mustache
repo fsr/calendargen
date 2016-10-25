@@ -30,12 +30,12 @@
               fill="
                 {{#isLecture}}
                   {{#isWeekday}}#fdfdfd{{/isWeekday}}
-                  {{#isWeekend}}#b1e11c{{/isWeekend}}
+                  {{#isWeekendOrHoliday}}#b1e11c{{/isWeekendOrHoliday}}
                 {{/isLecture}}
-                {{#isFree}}
+                {{#isNoLecture}}
                   {{#isWeekday}}#eeffbb{{/isWeekday}}
-                  {{#isWeekend}}#b1e11c{{/isWeekend}}
-                {{/isFree}}
+                  {{#isWeekendOrHoliday}}#b1e11c{{/isWeekendOrHoliday}}
+                {{/isNoLecture}}
                 "
               fill-opacity="0.5"
               stroke="#111111"
@@ -79,7 +79,7 @@
                   text-anchor="start">
               {{dayname}}
             </text>
-            {{#holiday}}
+            {{#text}}
               <text x="3.85"
                     y="0.15"
                     font-size="0.2"
@@ -87,9 +87,9 @@
                     font-weight="200"
                     fill="#444444"
                     text-anchor="end">
-                {{holiday}}
+                {{text}}
               </text>
-            {{/holiday}}
+            {{/text}}
           </g>
         </g>
       {{/days}}
