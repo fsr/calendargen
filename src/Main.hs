@@ -21,7 +21,8 @@ posRelTo x (a, b)
 data CalCell = CalCell
     Int -- ^ day of month (1..)
     Int -- ^ day of week (1..)
-    QuadState -- ^ isLectureTime (QuadState)
+    QuadState -- ^ isLectureTime
+    QuadState -- ^ isExamTime
     Bool -- ^ isFullHoliday
     (Maybe String) -- ^ text
 data Month = Month Int [CalCell] -- ^ month (1..) and its entries
@@ -36,15 +37,17 @@ instance ToMustache RenderableMonth where
     ]
 
 instance ToMustache CalCell where
-  toMustache (CalCell d wd lec fullhol mtext) = object $
+  toMustache (CalCell d wd lec exam fullhol mtext) = object $
     [ "monthday" ~> d
     , "dayname" ~> (daysShort !! (wd - 1))
-    , "isWeekday"          ~> (wd < 6 && not fullhol)
-    , "isWeekendOrHoliday" ~> (wd > 5 ||     fullhol)
+    , "isWeekendOrHoliday"   ~> (      wd > 5 || fullhol)
+    , "isNoWeekendOrHoliday" ~> (not $ wd > 5 || fullhol)
     , "isLecture"   ~> (lec /= No)
     , "isNoLecture" ~> (lec == No)
     , "isLectureStart" ~> (lec == Start)
     , "isLectureEnd"   ~> (lec == End)
+    , "isExam"   ~> (exam /= No)
+    , "isNoExam" ~> (exam == No)
     ] ++ case mtext of
            Nothing -> []
            Just t -> ["text" ~> t]
@@ -75,6 +78,18 @@ lecturePhases = map ((\((x1,x2,x3),(y1,y2,y3)) -> (C.fromGregorian x1 x2 x3, C.f
     -- SS 18
   , ((2018, 4, 9), (2018, 5,18))
   , ((2018, 5,28), (2018, 7,21))
+  ]
+
+examPhases :: [(C.Day, C.Day)]
+examPhases = map ((\((x1,x2,x3),(y1,y2,y3)) -> (C.fromGregorian x1 x2 x3, C.fromGregorian y1 y2 y3)))
+  [ -- WS 17/18
+    ((2017, 2, 6), (2017, 3, 4))
+    -- SS 17
+  , ((2017, 7,17), (2017, 8,12))
+    -- WS 17/18
+  , ((2018, 2, 5), (2018, 3, 3))
+    -- SS 18
+  , ((2018, 7,23), (2018, 8,18))
   ]
 
 fullHolidays = map (\((y,m,d), s) -> (C.fromGregorian y m d, s)) $
@@ -111,8 +126,8 @@ uniHolidays = map (\((y,m,d), s) -> (C.fromGregorian y m d, s)) $
   , ((2017, 5,17), "Dies academicus")
   ]
 noHolidays = map (\((y,m,d), s) -> (C.fromGregorian y m d, s)) $
-  [ ((2017, 6,15), "Lange Nacht der Wissenschaften")
-  , ((2017, 6,16), "OUTPUT")
+  [ ((2017, 6,15), "OUTPUT")
+  , ((2017, 6,16), "LNdW")
   ]
 
 
@@ -136,9 +151,13 @@ genCal syear smonth addmonths = firstYear ++ secondYear
               | otherwise = case filter (/= No) $ map (posRelTo day) lecturePhases of
                               [s] -> s
                               [] -> No
+            isInExamPhase
+              = case filter (/= No) $ map (posRelTo day) examPhases of
+                  [s] -> s
+                  [] -> No
             isFullHoliday = lookup day fullHolidays /= Nothing
             text = lookup day $ fullHolidays ++ uniHolidays ++ noHolidays
-        in CalCell monthday weekday isInLecturePhase isFullHoliday text
+        in CalCell monthday weekday isInLecturePhase isInExamPhase isFullHoliday text
 
 renderMonth
   :: (Month, Int) -- ^ month and its zero-based position in calendar
