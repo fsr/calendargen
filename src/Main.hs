@@ -45,11 +45,9 @@ instance ToMustache CalCell where
     , "dayname" ~> (daysShort !! (wd - 1))
     , "isWeekendOrHoliday" ~> (wd > 5 || fullhol)
     , "isLecture"   ~> (lec /= No)
-    , "isNoLecture" ~> (lec == No)
     , "isLectureStart" ~> (lec == Start)
     , "isLectureEnd"   ~> (lec == End)
     , "isExam"   ~> (exam /= No)
-    , "isNoExam" ~> (exam == No)
     ] ++ case mtext of
            Nothing -> []
            Just t -> ["text" ~> t]

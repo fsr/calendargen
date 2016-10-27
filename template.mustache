@@ -192,7 +192,7 @@
                     {{#isLecture}} #fdfdfd {{/isLecture}}
                     {{^isLecture}}
                       {{#isExam}} #fdfdfd {{/isExam}}
-                      {{#isNoExam}} #eeffbb {{/isNoExam}}
+                      {{^isExam}} #eeffbb {{/isExam}}
                     {{/isLecture}}
                   {{/isWeekendOrHoliday}}
                   "
