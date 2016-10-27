@@ -1,10 +1,12 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell #-}
 
 import qualified Data.Time.Calendar as C
 import Data.Time.Calendar.MonthDay (monthLength)
 import Data.Time.Calendar.WeekDate (toWeekDate)
 
 import Text.Mustache
+import Text.Mustache.Compile
 import Data.Text (unpack)
 
 import Debug.Trace
@@ -164,13 +166,10 @@ renderMonth
   -> RenderableMonth
 renderMonth (Month m cs, i) = RenderableMonth i (months !! (m-1)) cs
 
+tpl = $(embedTemplate ["."] "template.mustache")
+
 main = do
-  compiled <- automaticCompile ["."] "template.mustache"
-  template <- case compiled of
-    Left err -> error $ show err
-    Right template -> return template
-  
   let cal = genCal 2017 1 0
       renderableCal = map renderMonth $ zip cal [0..]
   
-  writeFile "generated.svg" $ unpack $ substitute template $ renderableCal
+  writeFile "generated.svg" $ unpack $ substitute tpl $ renderableCal
