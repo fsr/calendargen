@@ -4,6 +4,7 @@
 import qualified Data.Time.Calendar as C
 import Data.Time.Calendar.MonthDay (monthLength)
 import Data.Time.Calendar.WeekDate (toWeekDate)
+import Control.Arrow (first, (***))
 
 import Text.Mustache
 import Text.Mustache.Compile
@@ -60,8 +61,10 @@ daysShort = map (take 2) daysLong
 
 months = words "Januar Februar März April Mai Juni Juli August September Oktober November Dezember"
 
+tupleToDate (y,m,d) = C.fromGregorian y m d
+
 lecturePhases :: [(C.Day, C.Day)]
-lecturePhases = map ((\((x1,x2,x3),(y1,y2,y3)) -> (C.fromGregorian x1 x2 x3, C.fromGregorian y1 y2 y3)))
+lecturePhases = map (tupleToDate *** tupleToDate)
   [ -- WS 15/16
     ((2015,10,12), (2015,12,19))
   , ((2016, 1, 4), (2016, 2, 6))
@@ -83,7 +86,7 @@ lecturePhases = map ((\((x1,x2,x3),(y1,y2,y3)) -> (C.fromGregorian x1 x2 x3, C.f
   ]
 
 examPhases :: [(C.Day, C.Day)]
-examPhases = map ((\((x1,x2,x3),(y1,y2,y3)) -> (C.fromGregorian x1 x2 x3, C.fromGregorian y1 y2 y3)))
+examPhases = map (tupleToDate *** tupleToDate)
   [ -- WS 17/18
     ((2017, 2, 6), (2017, 3, 4))
     -- SS 17
@@ -94,7 +97,9 @@ examPhases = map ((\((x1,x2,x3),(y1,y2,y3)) -> (C.fromGregorian x1 x2 x3, C.from
   , ((2018, 7,23), (2018, 8,18))
   ]
 
-fullHolidays = map (\((y,m,d), s) -> (C.fromGregorian y m d, s)) $
+holidaysFromList = map (first tupleToDate) 
+
+fullHolidays = holidaysFromList
   [ ((2015,10, 3), "Tag der Deutschen Einheit")
   , ((2015,10,31), "Reformationstag")
   , ((2015,11,18), "Buß- und Bettag")
@@ -123,11 +128,11 @@ fullHolidays = map (\((y,m,d), s) -> (C.fromGregorian y m d, s)) $
   , ((2017,12,25), "1. Weihnachtstag")
   , ((2017,12,26), "2. Weihnachtstag")
   ]
-uniHolidays = map (\((y,m,d), s) -> (C.fromGregorian y m d, s)) $
+uniHolidays = holidaysFromList
   [ ((2016, 6, 1), "Dies academicus")
   , ((2017, 5,17), "Dies academicus")
   ]
-noHolidays = map (\((y,m,d), s) -> (C.fromGregorian y m d, s)) $
+noHolidays = holidaysFromList
   [ ((2017, 6,15), "OUTPUT")
   , ((2017, 6,16), "LNdW")
   ]
@@ -170,6 +175,6 @@ tpl = $(embedTemplate ["."] "template.mustache")
 
 main = do
   let cal = genCal 2017 1 0
-      renderableCal = map renderMonth $ zip cal [0..]
+      renderableCal = zipWith (curry renderMonth) cal [0..]
   
-  writeFile "generated.svg" $ unpack $ substitute tpl $ renderableCal
+  writeFile "generated.svg" $ unpack $ substitute tpl renderableCal
