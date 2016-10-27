@@ -43,8 +43,7 @@ instance ToMustache CalCell where
   toMustache (CalCell d wd lec exam fullhol mtext) = object $
     [ "monthday" ~> d
     , "dayname" ~> (daysShort !! (wd - 1))
-    , "isWeekendOrHoliday"   ~> (      wd > 5 || fullhol)
-    , "isNoWeekendOrHoliday" ~> (not $ wd > 5 || fullhol)
+    , "isWeekendOrHoliday" ~> (wd > 5 || fullhol)
     , "isLecture"   ~> (lec /= No)
     , "isNoLecture" ~> (lec == No)
     , "isLectureStart" ~> (lec == Start)
