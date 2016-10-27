@@ -1,0 +1,24 @@
+name:                calendargen
+version:             0.1.0.0
+synopsis:            Generate simple calendars
+description:         Please refer to the Readme at https://github.com/fsr/calendargen#readme       
+homepage:            https://github.com/fsr/calendargen
+license:             BSD3
+license-file:        LICENSE
+author:              Sebastian Mielke
+maintainer:          mielke@ifsr.de
+-- copyright:           
+category:            Graphics
+build-type:          Simple
+-- extra-source-files:  
+cabal-version:       >=1.10
+
+executable calendargen
+  main-is:             Main.hs
+  -- other-modules:       
+  build-depends:       base >=4.8 && <5
+                     , time
+                     , text
+                     , mustache
+  hs-source-dirs:      src
+  default-language:    Haskell2010
