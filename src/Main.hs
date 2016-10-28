@@ -177,7 +177,7 @@ tpl = $(embedTemplate ["."] "template.mustache")
 
 data Opts = Opts
   { templateLoc :: Maybe FilePath
-  , outputLoc :: Maybe FilePath
+  , outputLoc :: FilePath
   }
 
 
@@ -190,7 +190,7 @@ main = do
   tpl' <- maybe (return tpl) (fmap (either (error . show) id) . localAutomaticCompile) templateLoc
 
   -- I'd argue it would be a good idea to output to stdout by default rather than a hardcoded path
-  writeFile (fromMaybe "generated.svg" outputLoc) $ unpack $ substitute tpl' renderableCal
+  writeFile outputLoc $ unpack $ substitute tpl' renderableCal
   
   where
     optsParser = 
@@ -201,11 +201,14 @@ main = do
               (strOption 
                 (  long "template"
                 <> short 't' 
-                <> metavar "PATH" )) 
-            <*> optional 
-              (strOption
+                <> metavar "PATH"
+                <> help "path to the mustache template to use (default: internal template)" )) 
+            <*> strOption
                 (  long "output"
                 <> short 'o'
-                <> metavar "PATH" ))))
+                <> metavar "PATH"
+                <> value "generated.svg"
+                <> showDefault
+                <> help "where to write the generated svg to" )))
         (  fullDesc
         <> header "calendargen -- generate wall calendars" )
