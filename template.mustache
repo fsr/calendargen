@@ -188,25 +188,25 @@
                   {{#isWeekendOrHoliday}}
                     #b1e11c
                   {{/isWeekendOrHoliday}}
-                  {{#isNoWeekendOrHoliday}}
+                  {{^isWeekendOrHoliday}}
                     {{#isLecture}} #fdfdfd {{/isLecture}}
-                    {{#isNoLecture}}
+                    {{^isLecture}}
                       {{#isExam}} #fdfdfd {{/isExam}}
-                      {{#isNoExam}} #eeffbb {{/isNoExam}}
-                    {{/isNoLecture}}
-                  {{/isNoWeekendOrHoliday}}
+                      {{^isExam}} #eeffbb {{/isExam}}
+                    {{/isLecture}}
+                  {{/isWeekendOrHoliday}}
                   "
                 fill-opacity="0.5"
                 stroke="#111111"
                 stroke-width="0.01">
           </rect>
-          {{#isExam}}{{#isNoWeekendOrHoliday}}
+          {{#isExam}}{{^isWeekendOrHoliday}}
             <polygon fill="#eeffbb" fill-opacity="0.5" points="0,0.25 0.25,0 0.75,0 0,0.75" />
             <polygon fill="#eeffbb" fill-opacity="0.5" points="0.25,1 1.25,0 1.75,0 0.75,1" />
             <polygon fill="#eeffbb" fill-opacity="0.5" points="1.25,1 2.25,0 2.75,0 1.75,1" />
             <polygon fill="#eeffbb" fill-opacity="0.5" points="2.25,1 3.25,0 3.75,0 2.75,1" />
             <polygon fill="#eeffbb" fill-opacity="0.5" points="3.25,1 4,0.25 4,0.75 3.75,1" />
-          {{/isNoWeekendOrHoliday}}{{/isExam}}
+          {{/isWeekendOrHoliday}}{{/isExam}}
         </g>
       {{/days}}
       <!-- now we can paint all contents on top of it -->
