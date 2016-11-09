@@ -12,6 +12,7 @@ import Text.Mustache.Compile
 import Data.Text (unpack)
 import Options.Applicative
 import Data.Maybe (fromMaybe)
+import Data.Monoid ((<>))
 
 import Debug.Trace
 
