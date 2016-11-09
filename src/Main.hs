@@ -1,5 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE NamedFieldPuns #-}
 
 import qualified Data.Time.Calendar as C
 import Data.Time.Calendar.MonthDay (monthLength)
@@ -9,8 +10,11 @@ import Control.Arrow (first, (***))
 import Text.Mustache
 import Text.Mustache.Compile
 import Data.Text (unpack)
+import Options.Applicative
+import Data.Maybe (fromMaybe)
 
 import Debug.Trace
+
 
 data QuadState = No | Start | Mid | End deriving (Eq, Show)
 
@@ -170,8 +174,41 @@ renderMonth (Month m cs, i) = RenderableMonth i (months !! (m-1)) cs
 
 tpl = $(embedTemplate ["."] "template.mustache")
 
+
+data Opts = Opts
+  { templateLoc :: Maybe FilePath
+  , outputLoc :: FilePath
+  }
+
+
 main = do
+  Opts{outputLoc, templateLoc} <- execParser optsParser
+
   let cal = genCal 2017 1 0
       renderableCal = zipWith (curry renderMonth) cal [0..]
   
-  writeFile "generated.svg" $ unpack $ substitute tpl renderableCal
+  tpl' <- maybe (return tpl) (fmap (either (error . show) id) . localAutomaticCompile) templateLoc
+
+  -- I'd argue it would be a good idea to output to stdout by default rather than a hardcoded path
+  writeFile outputLoc $ unpack $ substitute tpl' renderableCal
+  
+  where
+    optsParser = 
+      info 
+        (helper <*> 
+          (Opts 
+            <$> optional 
+              (strOption 
+                (  long "template"
+                <> short 't' 
+                <> metavar "PATH"
+                <> help "path to the mustache template to use (default: internal template)" )) 
+            <*> strOption
+                (  long "output"
+                <> short 'o'
+                <> metavar "PATH"
+                <> value "generated.svg"
+                <> showDefault
+                <> help "where to write the generated svg to" )))
+        (  fullDesc
+        <> header "calendargen -- generate wall calendars" )
