@@ -85,6 +85,18 @@ lecturePhases = map (tupleToDate *** tupleToDate)
     -- SS 18
   , ((2018, 4, 9), (2018, 5,18))
   , ((2018, 5,28), (2018, 7,21))
+    -- WS 18/19
+  , ((2018,10, 8), (2018,12,21))
+  , ((2019, 1, 7), (2019, 2, 2))
+    -- SS 19
+  , ((2019, 4, 1), (2019, 6, 7))
+  , ((2019, 6,17), (2019, 7,13))
+    -- WS 19/20
+  , ((2019,10,14), (2019,12,21))
+  , ((2020, 1, 6), (2020, 2, 8))
+    -- SS 20
+  , ((2020, 4, 6), (2020, 5,29))
+  , ((2020, 6, 8), (2020, 7,18))
   ]
 
 examPhases :: [(C.Day, C.Day)]
@@ -97,6 +109,14 @@ examPhases = map (tupleToDate *** tupleToDate)
   , ((2018, 2, 5), (2018, 3, 3))
     -- SS 18
   , ((2018, 7,23), (2018, 8,18))
+    -- WS 18/19
+  , ((2019, 2, 4), (2019, 3, 2))
+    -- SS 19
+  , ((2019, 7,15), (2019, 8,10))
+    -- WS 19/20
+  , ((2020, 2,10), (2020, 3, 7))
+    -- SS 20
+  , ((2020, 7,20), (2020, 8,15))
   ]
 
 holidaysFromList = map (first tupleToDate) 
@@ -129,14 +149,47 @@ fullHolidays = holidaysFromList
   , ((2017,11,22), "Buß- und Bettag")
   , ((2017,12,25), "1. Weihnachtstag")
   , ((2017,12,26), "2. Weihnachtstag")
+  , ((2019, 1, 1), "Neujahr")
+  , ((2019, 4,19), "Karfreitag")
+  , ((2019, 4,22), "Ostermontag")
+  , ((2019, 5, 1), "Tag der Arbeit")
+  , ((2019, 5,30), "Christi Himmelfahrt")
+  , ((2019, 6,10), "Pfingstmontag")
+  , ((2019,10, 3), "Tag der Deutschen Einheit")
+  , ((2019,10,31), "Reformationstag")
+  , ((2019,11,20), "Buß- und Bettag")
+  , ((2019,12,25), "1. Weihnachtstag")
+  , ((2019,12,26), "2. Weihnachtstag")
+  , ((2020, 1, 1), "Neujahr")
+  , ((2020, 4,10), "Karfreitag")
+  , ((2020, 4,13), "Ostermontag")
+  , ((2020, 5, 1), "Tag der Arbeit")
+  , ((2020, 5,21), "Christi Himmelfahrt")
+  , ((2020, 6, 1), "Pfingstmontag")
+  , ((2020,10, 3), "Tag der Deutschen Einheit")
+  , ((2020,10,31), "Reformationstag")
+  , ((2020,11,18), "Buß- und Bettag")
+  , ((2020,12,25), "1. Weihnachtstag")
+  , ((2020,12,26), "2. Weihnachtstag")
   ]
 uniHolidays = holidaysFromList
   [ ((2016, 6, 1), "Dies academicus")
   , ((2017, 5,17), "Dies academicus")
+  , ((2018, 6, 6), "Dies academicus")
+  , ((2019, 5,22), "Dies academicus")
+  , ((2020, 5,13), "Dies academicus")
   ]
 noHolidays = holidaysFromList
   [ ((2017, 6,15), "OUTPUT")
   , ((2017, 6,16), "LNdW")
+  , ((2019, 6,11), "KIF 47,0")
+  , ((2019, 6,12), "KIF 47,0")
+  , ((2019, 6,13), "KIF 47,0")
+  , ((2019, 6,14), "KIF 47,0")
+  , ((2019, 6,15), "KIF 47,0")
+  , ((2019, 6,16), "KIF 47,0")
+  , ((2019, 6,19), "OUTPUT")
+  , ((2019, 6,19), "OUTPUT")
   ]
 
 
@@ -185,7 +238,7 @@ data Opts = Opts
 main = do
   Opts{outputLoc, templateLoc} <- execParser optsParser
 
-  let cal = genCal 2017 1 0
+  let cal = genCal 2019 1 0
       renderableCal = zipWith (curry renderMonth) cal [0..]
   
   tpl' <- maybe (return tpl) (fmap (either (error . show) id) . localAutomaticCompile) templateLoc
