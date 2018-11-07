@@ -189,7 +189,7 @@ noHolidays = holidaysFromList
   , ((2019, 6,15), "KIF 47,0")
   , ((2019, 6,16), "KIF 47,0")
   , ((2019, 6,19), "OUTPUT")
-  , ((2019, 6,19), "OUTPUT")
+  , ((2019, 6,20), "OUTPUT")
   ]
 
 
