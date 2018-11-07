@@ -237,6 +237,17 @@
                   text-anchor="end">
               {{monthday}}
             </text>
+            {{#isMonday}}
+              <text x="5"
+                    y="-0.01"
+                    font-size="0.3"
+                    font-family="Exo"
+                    font-weight="100"
+                    fill="#444444"
+                    text-anchor="start">
+                {{weeknr}}
+              </text>
+            {{/isMonday}}
             <text x="0.9"
                   y="-0.03"
                   font-size="0.4"

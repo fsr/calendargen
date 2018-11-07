@@ -28,6 +28,7 @@ posRelTo x (a, b)
 
 data CalCell = CalCell
     Int -- ^ day of month (1..)
+    Int -- ^ week number (1..52)
     Int -- ^ day of week (1..)
     QuadState -- ^ isLectureTime
     QuadState -- ^ isExamTime
@@ -45,9 +46,11 @@ instance ToMustache RenderableMonth where
     ]
 
 instance ToMustache CalCell where
-  toMustache (CalCell d wd lec exam fullhol mtext) = object $
+  toMustache (CalCell d wn wd lec exam fullhol mtext) = object $
     [ "monthday" ~> d
+    , "weeknr" ~> wn
     , "dayname" ~> (daysShort !! (wd - 1))
+    , "isMonday" ~> (wd == 1)
     , "isWeekendOrHoliday" ~> (wd > 5 || fullhol)
     , "isLecture"   ~> (lec /= No)
     , "isLectureStart" ~> (lec == Start)
@@ -206,7 +209,7 @@ genCal syear smonth addmonths = firstYear ++ secondYear
                  $ map (genCell . C.fromGregorian y m)
                  $ [1..(monthLength (C.isLeapYear y) m)]
     genCell day
-      = let (_, _, weekday) = toWeekDate day
+      = let (_, weeknr, weekday) = toWeekDate day
             (_, _, monthday) = C.toGregorian day
             isInLecturePhase
               | lookup day uniHolidays /= Nothing = No
@@ -219,7 +222,7 @@ genCal syear smonth addmonths = firstYear ++ secondYear
                   [] -> No
             isFullHoliday = lookup day fullHolidays /= Nothing
             text = lookup day $ fullHolidays ++ uniHolidays ++ noHolidays
-        in CalCell monthday weekday isInLecturePhase isInExamPhase isFullHoliday text
+        in CalCell monthday weeknr weekday isInLecturePhase isInExamPhase isFullHoliday text
 
 renderMonth
   :: (Month, Int) -- ^ month and its zero-based position in calendar
