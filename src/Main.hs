@@ -100,6 +100,15 @@ lecturePhases = map (tupleToDate *** tupleToDate)
     -- SS 20
   , ((2020, 4, 6), (2020, 5,29))
   , ((2020, 6, 8), (2020, 7,18))
+    -- WS 22/23
+  , ((2022,10,10), (2022,12,20))
+  , ((2023, 1, 4), (2023, 2, 4))
+    -- SS 23
+  , ((2023, 4, 3), (2023, 5,26))
+  , ((2023, 6, 5), (2023, 7,15))
+    -- WS 23/24
+  , ((2023,10, 9), (2023,12,20))
+  , ((2024, 1, 4), (2024, 2, 3))
   ]
 
 examPhases :: [(C.Day, C.Day)]
@@ -120,6 +129,12 @@ examPhases = map (tupleToDate *** tupleToDate)
   , ((2020, 2,10), (2020, 3, 7))
     -- SS 20
   , ((2020, 7,20), (2020, 8,15))
+    -- WS 22/23
+  , ((2023, 2, 6), (2023, 3, 4))
+    -- SS 23
+  , ((2023, 7,17), (2023, 8,12))
+    -- WS 23/24
+  , ((2024, 2, 5), (2024, 3, 2))
   ]
 
 holidaysFromList = map (first tupleToDate) 
@@ -174,6 +189,23 @@ fullHolidays = holidaysFromList
   , ((2020,11,18), "Buß- und Bettag")
   , ((2020,12,25), "1. Weihnachtstag")
   , ((2020,12,26), "2. Weihnachtstag")
+  , ((2022,10, 3), "Tag der Deutschen Einheit")
+  , ((2022,10,31), "Reformationstag")
+  , ((2022,11,16), "Buß- und Bettag")
+  , ((2022,12,25), "1. Weihnachtstag")
+  , ((2022,12,26), "2. Weihnachtstag")
+  , ((2023, 1, 1), "Neujahr")
+  , ((2023, 4, 7), "Karfreitag")
+  , ((2023, 4,10), "Ostermontag")
+  , ((2023, 5, 1), "Tag der Arbeit")
+  , ((2023, 5,18), "Christi Himmelfahrt")
+  , ((2023, 5,29), "Pfingstmontag")
+  , ((2023,10, 3), "Tag der Deutschen Einheit")
+  , ((2023,10,31), "Reformationstag")
+  , ((2023,11,22), "Buß- und Bettag")
+  , ((2023,12,25), "1. Weihnachtstag")
+  , ((2023,12,26), "2. Weihnachtstag")
+  , ((2024, 1, 1), "Neujahr")
   ]
 uniHolidays = holidaysFromList
   [ ((2016, 6, 1), "Dies academicus")
@@ -181,6 +213,7 @@ uniHolidays = holidaysFromList
   , ((2018, 6, 6), "Dies academicus")
   , ((2019, 5,22), "Dies academicus")
   , ((2020, 5,13), "Dies academicus")
+  , ((2023, 5,10), "Dies academicus")
   ]
 noHolidays = holidaysFromList
   [ ((2017, 6,15), "OUTPUT")
@@ -193,6 +226,9 @@ noHolidays = holidaysFromList
   , ((2019, 6,16), "KIF 47,0")
   , ((2019, 6,19), "OUTPUT")
   , ((2019, 6,20), "OUTPUT")
+  , ((2022, 12, 2), "KIF 50,7")
+  , ((2023, 6,29), "OUTPUT")
+  , ((2023, 5,17), "KIF 51,0")
   ]
 
 
@@ -241,7 +277,7 @@ data Opts = Opts
 main = do
   Opts{outputLoc, templateLoc} <- execParser optsParser
 
-  let cal = genCal 2019 1 0
+  let cal = genCal 2023 1 0
       renderableCal = zipWith (curry renderMonth) cal [0..]
   
   tpl' <- maybe (return tpl) (fmap (either (error . show) id) . localAutomaticCompile) templateLoc
