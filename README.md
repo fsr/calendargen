@@ -9,6 +9,8 @@
 3. Run it
     - `calendargen` on the command line
 
+In case the svg data won`t open correctly, open it with inkscape and export as svg again.
+
 ## Options
 
 Per default it creates a calendar from an internal template and saves it to "generated.svg" but this can be configured using command line options.
