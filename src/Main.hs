@@ -109,6 +109,12 @@ lecturePhases = map (tupleToDate *** tupleToDate)
     -- WS 23/24
   , ((2023,10, 9), (2023,12,20))
   , ((2024, 1, 4), (2024, 2, 3))
+    -- SS 24
+  , ((2024, 4, 8), (2024, 5,18))
+  , ((2024, 5,27), (2024, 7,20))
+  -- WS 24/25
+  , ((2024,10,14), (2024,12,21))
+  , ((2025, 1, 6), (2025, 2, 8))
   ]
 
 examPhases :: [(C.Day, C.Day)]
@@ -135,9 +141,13 @@ examPhases = map (tupleToDate *** tupleToDate)
   , ((2023, 7,17), (2023, 8,12))
     -- WS 23/24
   , ((2024, 2, 5), (2024, 3, 2))
+    -- SS 24
+  , ((2024, 7,20), (2024, 8,17))
+    -- WS 24/25
+  , ((2025, 2,10), (2025, 3, 8))
   ]
 
-holidaysFromList = map (first tupleToDate) 
+holidaysFromList = map (first tupleToDate)
 
 fullHolidays = holidaysFromList
   [ ((2015,10, 3), "Tag der Deutschen Einheit")
@@ -206,6 +216,16 @@ fullHolidays = holidaysFromList
   , ((2023,12,25), "1. Weihnachtstag")
   , ((2023,12,26), "2. Weihnachtstag")
   , ((2024, 1, 1), "Neujahr")
+  , ((2024, 3,29), "Karfreitag")
+  , ((2024, 4, 1), "Ostermontag")
+  , ((2024, 5, 1), "Tag der Arbeit")
+  , ((2024, 5, 9), "Christi Himmelfahrt")
+  , ((2024, 5,20), "Pfingstmontag")
+  , ((2024,10, 3), "Tag der Deutschen Einheit")
+  , ((2024,10,31), "Reformationstag")
+  , ((2024,11,20), "Buß- und Bettag")
+  , ((2024,12,25), "1. Weihnachtstag")
+  , ((2024,12,26), "2. Weihnachtstag")
   ]
 uniHolidays = holidaysFromList
   [ ((2016, 6, 1), "Dies academicus")
@@ -214,6 +234,7 @@ uniHolidays = holidaysFromList
   , ((2019, 5,22), "Dies academicus")
   , ((2020, 5,13), "Dies academicus")
   , ((2023, 5,10), "Dies academicus")
+  , ((2024, 6, 5), "Dies academicus")
   ]
 noHolidays = holidaysFromList
   [ ((2017, 6,15), "OUTPUT")
@@ -229,6 +250,9 @@ noHolidays = holidaysFromList
   , ((2022, 12, 2), "KIF 50,7")
   , ((2023, 6,29), "OUTPUT")
   , ((2023, 5,17), "KIF 51,0")
+  , ((2024, 5, 8), "KIF 52,0")
+  , ((2024, 6,13), "OUTPUT")
+  , ((2024, 6,14), "LNdW")
   ]
 
 
@@ -277,25 +301,25 @@ data Opts = Opts
 main = do
   Opts{outputLoc, templateLoc} <- execParser optsParser
 
-  let cal = genCal 2023 1 0
+  let cal = genCal 2024 1 0
       renderableCal = zipWith (curry renderMonth) cal [0..]
-  
+
   tpl' <- maybe (return tpl) (fmap (either (error . show) id) . localAutomaticCompile) templateLoc
 
   -- I'd argue it would be a good idea to output to stdout by default rather than a hardcoded path
   writeFile outputLoc $ unpack $ substitute tpl' renderableCal
-  
+
   where
-    optsParser = 
-      info 
-        (helper <*> 
-          (Opts 
-            <$> optional 
-              (strOption 
+    optsParser =
+      info
+        (helper <*>
+          (Opts
+            <$> optional
+              (strOption
                 (  long "template"
-                <> short 't' 
+                <> short 't'
                 <> metavar "PATH"
-                <> help "path to the mustache template to use (default: internal template)" )) 
+                <> help "path to the mustache template to use (default: internal template)" ))
             <*> strOption
                 (  long "output"
                 <> short 'o'
