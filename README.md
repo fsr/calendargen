@@ -26,6 +26,6 @@ To see the available options run `calendargen --help`.
     Available options:
     -h,--help                Show this help text
     -t,--template PATH       path to the mustache template to use (default:
-                            internal template)
+                            internal compiled-in(?) template)
     -o,--output PATH         where to write the generated svg
                             to (default: "generated.svg")
