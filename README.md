@@ -10,6 +10,8 @@
     - `calendargen` on the command line
 
 In case the svg data won`t open correctly, open it with inkscape and export as svg again.
+This problem is probably caused by the template containing `inkscape:` namespace prefixes that other viewers don’t support.
+I deleted them because I assume they are not relevant if they are not supported by other viewers anyway.
 
 ## Options
 
